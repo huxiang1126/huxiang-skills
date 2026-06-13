@@ -2,7 +2,7 @@
 
 2026 世界杯赛前盘口预测总控 Skill。
 
-输入两支国家队，就自动检索赛程、近况、阵容、盘口、天气、场地和市场热度。它不会直接顺着盘口写总结，而是先做无盘口独立模型，再和市场盘口对照，并把「90 分钟胜负倾向」和「投注主推」明确分开，最后输出：
+输入两支国家队，就先读取本地回溯账本，再自动检索赛程、近况、阵容、盘口、天气、场地和市场热度。它不会直接顺着盘口写总结，而是先做无盘口独立模型，再和市场盘口对照，并把「90 分钟胜负倾向」和「投注主推」明确分开，最后输出：
 
 1. 最终胜负倾向
 2. 3 个比分方案
@@ -36,6 +36,9 @@ Korea Republic vs Czechia
 - 海报禁止只写「看好某队」；必须写「90分钟倾向」和「主推：让球盘/大小球」
 - 投注建议必须写清赢盘条件，例如「全场 3 球及以上赢盘」或「加拿大 90 分钟赢球才赢盘」
 - 如果主推让球盘，必须把 `-0.25`、`-0.5`、`+0.75` 这类亚洲盘翻译成人话：让平/半、让半球、受让半/一，以及赢盘、走水、赢半/输半条件
+- 每次预测前读取 `~/Documents/worldcup-prediction/ledger.jsonl`，用最近错因校准本场判断
+- 支持 `-review` 赛后回溯评分，把实际赛果、盘口命中、比分命中和错因标签写回账本
+- 支持 `-ledger` 查看最近预测账本、命中率和高频错因
 - 让球盘和大小球分别判断，但最终只给一个综合主推
 - 如果盘口价格已坏或疑似诱盘无法解释，正式输出「本场不建议投注」
 - 图 A 是朋友圈预测海报，主推盘口要非常明显
@@ -90,6 +93,53 @@ Korea Republic vs Czechia
 ```
 
 如果是 `-0.25`、`-0.75`、`+0.25`、`+0.75` 这类盘口，必须写出赢半/输半条件，不能只给符号。
+
+## v2.4 的关键变化
+
+这版加入赛后回溯评分模块。
+
+本地账本：
+
+```text
+~/Documents/worldcup-prediction/ledger.jsonl
+```
+
+Skill 包内置种子记录：
+
+```text
+skills/worldcup-prediction/data/retrospective-ledger.seed.jsonl
+```
+
+预测前会检查最近记录，重点看：
+
+- 赛果倾向命中率
+- 主推盘口命中率
+- 主比分与比分池命中率
+- 高频错因标签
+- 最近 5 场是否触发连续错因熔断
+
+常见错因标签：
+
+```text
+small_ball_overuse
+big_ball_overreach
+home_conversion_overrate
+set_piece_risk_underweight
+favorite_handicap_overtrust
+score_too_conservative
+market_summary_bias
+injury_impact_underweight
+draw_path_underweight
+```
+
+用法：
+
+```text
+/worldcup-prediction 美国 vs 巴拉圭 -review
+/worldcup-prediction -ledger
+```
+
+`-review` 会联网核对实际比分，并把 `result_lean_hit`、`main_pick_result`、`main_score_hit`、`score_pool_hit`、`failure_tags` 写回账本。
 
 ## 输出结构
 
