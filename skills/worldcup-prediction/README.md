@@ -46,6 +46,28 @@ Korea Republic vs Czechia
 - 如果盘口价格已坏或疑似诱盘无法解释，正式输出「本场不建议投注」
 - 图 A 是朋友圈预测海报，主推盘口要非常明显，并使用毛笔字/手写冲击字、英文功能小字和强对抗构图
 - 图 B 是分析思路长图，参考 `huxiang-travel` 的研究卡片方式，使用 `huxiang-card`，保留底部 logo、头像和署名「虎小象」
+- 图 B 生成前必须读取已验证母版，优先继承 `worldcup-qatar-switzerland-v24-analysis.html` 这类字体和排版正确的分析图；中文字体路径必须保留 `KingHwa_OldSong`（京華老宋体），不能临时改成系统 UI 字体或普通 dashboard 风格
+
+## v2.5.1 的关键变化
+
+这版专门修正「分析思路长图字体和母版被后续优化漏掉」的问题。
+
+图 B 生成前必须执行：
+
+```text
+读取已验证 WC26 分析图 HTML 母版
+-> 继承 --sans / --serif 中的 KingHwa_OldSong 字体路径
+-> 继承 huxiang-card footer：logo + 虎小象
+-> 只替换球队、盘口、比分、天气、首发和配色
+-> 截图前 rg 检查 KingHwa_OldSong / colophon / 虎小象
+-> 截图后实际查看 PNG
+```
+
+优先母版示例：
+
+```text
+~/Downloads/worldcup-qatar-switzerland-v24-analysis.html
+```
 
 ## v2.1 的关键变化
 

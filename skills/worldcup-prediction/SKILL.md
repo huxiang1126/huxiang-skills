@@ -2,7 +2,7 @@
 name: worldcup-prediction
 description: "2026 世界杯赛前盘口预测总控。用户输入两支国家队对阵，或提到世界杯预测、盘口、让球、大小球、比分、朋友圈海报时使用。必须先读取历史回溯账本并联网检索赛程、近况、阵容、首发、盘口、天气与市场热度，再先做无盘口独立判断，再与盘口对照，给出明确的 90 分钟胜负倾向、3 个比分、唯一主推盘口类型与投注方向、让球盘赢盘规则、首发可信依据、天气对进球数/球员状态的影响、朋友圈文案，并生成 2 张图：冲击力预测海报 + 整场分析思路长图。也支持赛后回溯评分并写入本地预测账本。"
 user_invocable: true
-version: "2.5.0"
+version: "2.5.1"
 ---
 
 # worldcup-prediction: 世界杯赛前盘口预测总控
@@ -27,6 +27,7 @@ version: "2.5.0"
 - 天气不能只列数据。必须说明它对进球数、比赛节奏、体能、逼抢、射门质量、门将处理球或定位球的具体影响。
 - 若距开球约 90 分钟内，必须优先抓取官方/权威媒体确认首发；若还没有确认首发，必须标注「预测首发」，并说明首发不确定性对盘口强度的影响。
 - 预测海报必须加强视觉冲击：允许毛笔字/手写冲击字、英文功能小字、强对比构图，但仍要清楚写出主推盘口和赢盘条件。
+- 分析思路长图必须继承已验证的 `huxiang-card` 字体和版式母版；中文正文/标题优先走 `KingHwa_OldSong`（京華老宋体）渲染路径，不能临时改成系统 UI 字体或自造 dashboard 风格。
 
 ## 参数
 
@@ -68,6 +69,7 @@ version: "2.5.0"
 16. 只要检索到天气，就必须输出「天气对进球/体能影响」；不能只写温度、湿度、风速。
 17. 只要检索到确认首发，就必须输出「首发阵容锚点」；不能只写“阵容完整/伤停不明”。
 18. 图 A 的主视觉要更像赛前战报海报：毛笔字/冲击字 + 英文小字标签 + 队服/国旗色对抗；不要普通信息卡模板感。
+19. 图 B 禁止重新发明 HTML 字体体系。生成前必须先读取一个已验证母版（优先最近正确的 `worldcup-*-analysis.html`，如 `worldcup-qatar-switzerland-v24-analysis.html`；没有时读取 `huxiang-card` 模板），继承其中 `--sans: 'DM Sans', 'KingHwa_OldSong', ...` 与 footer 结构；输出前必须检查 HTML 内存在 `KingHwa_OldSong`，并用截图实际查看 PNG。
 
 ## 执行
 
@@ -358,6 +360,7 @@ version: "2.5.0"
 - 适合本场的视觉关键词：硬朗 / 湿热 / 雨战 / 高原 / 夜场 / 德比 / 对抗 / 速度
 - 中文主标题的字体气质：毛笔字、手写冲击字、压迫感黑体、报纸战报字、金属刻字，只选一种主风格
 - 英文功能小字：FINAL PICK / HANDICAP / SCORE / WEATHER / STARTING XI，用来增强设计感，不替代中文判断
+- 图 B 长图字体母版：优先继承上一张已验证 `worldcup-*-analysis.html` 的字体栈和版式骨架；中文正文/标题必须保留 `KingHwa_OldSong`（京華老宋体）作为中文渲染路径，不能用系统 UI 字体重写。
 
 输出给图片生成与 `huxiang-card` 卡片使用。
 
@@ -710,6 +713,20 @@ set_piece_risk_underweight 触发
 
 优先调用 `huxiang-card -i`；内容较长时用 `huxiang-card -l`。
 
+生成前必须先做「母版读取」：
+
+1. 优先读取最近一张已经被确认字体和排版正确的 WC26 分析图 HTML，例如 `~/Downloads/worldcup-qatar-switzerland-v24-analysis.html`。
+2. 如果没有可用历史母版，再读取 `huxiang-card` 的 `assets/infograph_template.html` 或 `assets/long_template.html`。
+3. 新图可以改配色、球队信息、内容结构，但不得改掉核心字体栈和 footer 结构。
+4. CSS 必须保留以下字体路径之一：
+
+```css
+--sans: 'DM Sans', 'KingHwa_OldSong', -apple-system, 'PingFang SC', system-ui, sans-serif;
+--serif: 'DM Serif Display', 'KingHwa_OldSong', Georgia, 'Noto Serif SC', serif;
+```
+
+其中 `KingHwa_OldSong` 是中文主要观感来源；如果缺失，必须先修 HTML 再截图。
+
 卡片内容结构：
 
 ```
@@ -739,6 +756,7 @@ set_piece_risk_underweight 触发
 - 首发模块必须写「已确认 / 预测 / 暂无可靠资料」的可信状态
 - 保留 `huxiang-card` 模板底部的 logo、头像、署名「虎小象」
 - 不改 footer，不替换头像，不改作者名
+- 生成后必须用 `rg -n "KingHwa_OldSong|colophon|虎小象" {html}` 检查字体栈和 footer，再用截图工具导出 PNG 并实际查看图片；不能只看 HTML。
 
 ### 7. 汇总报告
 
@@ -828,3 +846,4 @@ set_piece_risk_underweight 触发
 - 不要只列天气数据。必须写它对节奏、体能、射门、门将和大小球的影响。
 - 不要只说「阵容完整」。查得到确认首发时，必须列关键首发并说明如何影响盘口。
 - 不要生成普通信息卡风格海报。图 A 必须有毛笔字/手写冲击字、英文功能小字和强对抗构图，且主推盘口最大。
+- 不要在图 B 里临时自造字体和排版。必须先继承已验证母版，尤其是 `KingHwa_OldSong`（京華老宋体）字体路径；否则长图会变成普通 dashboard，不符合本技能。
