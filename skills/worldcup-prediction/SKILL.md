@@ -527,7 +527,7 @@ v2.7.2 默认必须输出一个相对最优投注建议。
 
 1. 优先读取最近正确的 `worldcup-*-analysis.html`。
 2. 保留并实际使用 `KingHwa_OldSong`（京華老宋体）字体路径。
-3. 保留 `huxiang-card` footer：logo + 虎小象。
+3. 保留 `huxiang-card` footer：logo + 虎小象。logo / 头像必须引用真实资产，例如 `file:///Users/hx/.codex/skills/huxiang-card/assets/logo.png` 或同源安装路径；禁止用文字圆点、emoji、渐变圆、临时头像或手写「虎」替代。
 4. 字体必须是实际渲染优先级，不是只声明存在。所有中文主文案、标题、卡片文字、比分、底部署名都必须以 `KingHwa_OldSong` 为第一优先字体；禁止把 `DM Sans`、`DM Serif Display`、`Poppins`、`PingFang SC`、`system-ui`、`sans-serif` 放在 `KingHwa_OldSong` 前面。
 5. 若使用 CSS 变量，必须满足：
 
