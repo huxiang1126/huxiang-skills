@@ -92,7 +92,7 @@ Agent 回执：
 
 - 继承已验证 WC26 长图 HTML 母版。
 - 保留 `KingHwa_OldSong`（京華老宋体）。
-- 保留 `huxiang-card` footer：logo + 虎小象。
+- 分析思路长图必须保留 `huxiang-card` footer：logo / 头像 + 虎小象；预测海报不要求 `虎小象` footer。
 - 截图前检查：
 
 ```bash
