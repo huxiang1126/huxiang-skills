@@ -1,0 +1,4 @@
+interface:
+  display_name: "Huxiang Fashion Prompt"
+  short_description: "Matrix-driven candid fashion image prompts"
+  default_prompt: "Use $huxiang-fashion-prompt to turn this fashion photo idea into a production-ready image prompt."
