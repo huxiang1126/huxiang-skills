@@ -32,13 +32,11 @@ Default to producing one copy-pasteable final prompt. Ask a question only when t
    - Wind and motion should share one believable cause.
    - Hair, garment edges, light props, and body movement should respond consistently.
 5. Build randomization matrices only for replaceable variables:
-   - Typical matrices: action, scene/world, light, foreground, camera position, head direction, eye line, prop/accessory, background social layer, material/color atmosphere.
+   - Typical matrices: action, scene/world, light, foreground, camera position, prop/accessory, background social layer, material/color atmosphere.
    - Each matrix should offer specific, visually different options.
    - Require exactly one option per matrix, internal shuffle, no first-option bias, no exposed labels in the final image.
-   - For a set or batch, visible face direction and eye line must vary across the set; do not let every face look toward image-right or repeat the same three-quarter angle.
 6. Add anti-collapse rules:
    - Name the default failure mode directly, for example generic cafe window seating, tourist landmark street, beach postcard, beige interior, fake luxury set, overposed fashion campaign.
-   - Name batch-specific collapse directly when relevant, for example every visible face looking toward image-right, identical head turns, or repeated off-camera gaze.
    - Preserve the chosen action and scene world; do not let the final prompt rewrite an active scene into a seated pose.
 7. Add composition rules and a quality gate:
    - Subject remains the hero.
@@ -86,32 +84,6 @@ When no `FACE_REF` is provided and the user has not specified another model iden
 If FACE_REF is NOT provided, use a tall, slender East Asian woman with elegant dimensional facial features, clear bone structure, refined natural proportions, realistic skin texture, naturally textured medium-length hair, and a calm premium fashion presence.
 Her facial features must not become flat, generic, childish, overly cute, overly Westernized, celebrity-like, or identity-inconsistent.
 Her medium-length hair must remain naturally textured and wind-aware: visible strands and ends respond to the same believable airflow as the outfit and scene, without covering the face or weakening identity readability.
-```
-
-## Batch Gaze Diversity
-
-When generating a set, batch, grid, series, or multiple variations with visible faces, include a dedicated head-direction and eye-line matrix. The goal is to prevent the common collapse where every subject looks toward image-right.
-
-Use this rule when relevant:
-
-```text
-If generating a set or batch, visible face direction must vary across the set.
-Do not make every subject look toward image-right.
-Across 9 images, use at least 5 distinct head-and-gaze directions.
-No more than 2 images may share the same head direction or eye direction.
-Camera angle, body direction, head turn, and eye line must not collapse into the same right-facing three-quarter profile.
-
-GAZE AND HEAD DIRECTION MATRIX
-Internally select EXACTLY ONE option for each image, and rotate options across the batch:
-1. looking directly into the camera with a calm candid expression
-2. looking slightly left of camera, three-quarter face visible
-3. looking slightly right of camera, three-quarter face visible
-4. looking down at the object, garment detail, or scene detail in her hands
-5. looking toward the light, wind, or architectural direction, face lifted naturally
-6. looking over her shoulder back toward the camera
-7. looking toward the open distance, side profile, alternating left and right across the batch
-8. eyes lowered softly while the head turns toward camera, quiet candid moment
-9. looking toward a person or action off-camera, not toward image-right by default
 ```
 
 ## Reference
