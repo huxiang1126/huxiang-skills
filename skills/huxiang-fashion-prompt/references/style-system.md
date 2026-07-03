@@ -35,7 +35,9 @@ When the user's request is not clothing-reference based, replace `OUTFIT_REF` wi
 Use a default only when the user has not supplied a face reference and still needs a fashion subject:
 
 ```text
-If FACE_REF is NOT provided, use a beautiful young Korean woman with a tall, slender fashion-model body frame, naturally textured short hair, healthy natural skin, and a realistic premium presence.
+If FACE_REF is NOT provided, use a tall, slender East Asian woman with elegant dimensional facial features, clear bone structure, refined natural proportions, realistic skin texture, naturally textured medium-length hair, and a calm premium fashion presence.
+Her facial features must not become flat, generic, childish, overly cute, overly Westernized, celebrity-like, or identity-inconsistent.
+Her medium-length hair must remain naturally textured and wind-aware: visible strands and ends respond to the same believable airflow as the outfit and scene, without covering the face or weakening identity readability.
 ```
 
 Adjust identity respectfully when the user specifies age, gender, ethnicity, body type, or brand model direction. Never over-describe ethnicity or beauty traits when they are not needed.
@@ -135,7 +137,7 @@ Wind must have one believable source:
 
 ```text
 Wind dynamics are mandatory.
-Short hair must show visible natural movement.
+Naturally textured medium-length hair must show visible natural movement.
 Several strands of hair should drift naturally across the face without hiding identity.
 Outfit edges, hems, collars, sleeves, or loose structural areas should respond subtly to the same breeze.
 If indoors, airflow should feel believable from an open door, window gap, corridor draft, courtyard opening, cave mouth, skylight shaft, terrace edge, or semi-outdoor threshold.
@@ -180,6 +182,7 @@ Before returning the prompt, verify:
 - The output asks for one image only.
 - Input locks are written before creative scene description.
 - References override conflicting text.
+- If no FACE_REF is provided, the East Asian default identity fallback is present: dimensional facial features, clear bone structure, tall slender frame, realistic skin texture, naturally textured medium-length hair, and wind-aware hair movement.
 - Every matrix has an exact-one selection rule.
 - Any matrix labels and option numbers are prompt instructions only and must not appear as image text.
 - The scene world has specific spatial identity.
