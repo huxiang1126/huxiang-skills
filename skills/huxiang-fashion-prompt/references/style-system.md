@@ -65,6 +65,7 @@ Useful matrix categories:
 - Wind or motion behavior.
 - Foreground or occlusion layer.
 - Camera position.
+- Head direction and eye line.
 - Prop/accessory interaction.
 - Background social layer.
 - Material and color atmosphere.
@@ -80,6 +81,44 @@ If two selected items feel repetitive, weak, incompatible, or too generic togeth
 ```
 
 Long-form prompts may include visible matrix headings such as `ACTION MATRIX` or `SUNLIGHT MATRIX`; this is part of the user's established style. The prohibition is against the generated image containing prompt text, labels, option numbers, or menu artifacts.
+
+## Batch Gaze Diversity
+
+When generating a set, grid, series, or multiple variations with visible faces, always add a dedicated head-direction and eye-line matrix. Varying camera position is not enough; models often change the lens angle while keeping every face turned toward image-right.
+
+Use this batch rule:
+
+```text
+If generating a set or batch, visible face direction must vary across the set.
+Do not make every subject look toward image-right.
+Across 9 images, use at least 5 distinct head-and-gaze directions.
+No more than 2 images may share the same head direction or eye direction.
+Camera angle, body direction, head turn, and eye line must not collapse into the same right-facing three-quarter profile.
+```
+
+Use this matrix when the user asks for a set or when the prompt may be reused for multiple outputs:
+
+```text
+GAZE AND HEAD DIRECTION MATRIX
+Internally select EXACTLY ONE option for each image, and rotate options across the batch:
+1. looking directly into the camera with a calm candid expression
+2. looking slightly left of camera, three-quarter face visible
+3. looking slightly right of camera, three-quarter face visible
+4. looking down at the object, garment detail, or scene detail in her hands
+5. looking toward the light, wind, or architectural direction, face lifted naturally
+6. looking over her shoulder back toward the camera
+7. looking toward the open distance, side profile, alternating left and right across the batch
+8. eyes lowered softly while the head turns toward camera, quiet candid moment
+9. looking toward a person or action off-camera, not toward image-right by default
+```
+
+Add a matching negative when relevant:
+
+```text
+No repeated right-facing gaze across the batch.
+No every-subject-looking-to-image-right collapse.
+No identical head angle repeated across all images.
+```
 
 For complex systems, use staged selection:
 
@@ -184,6 +223,7 @@ Before returning the prompt, verify:
 - References override conflicting text.
 - If no FACE_REF is provided, the East Asian default identity fallback is present: dimensional facial features, clear bone structure, tall slender frame, realistic skin texture, naturally textured medium-length hair, and wind-aware hair movement.
 - Every matrix has an exact-one selection rule.
+- For a set or batch with visible faces, head direction and eye line have their own diversity rule and matrix.
 - Any matrix labels and option numbers are prompt instructions only and must not appear as image text.
 - The scene world has specific spatial identity.
 - Light direction, wind, action, props, and environment are physically compatible.
