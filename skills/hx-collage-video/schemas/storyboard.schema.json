@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://huxiang.local/schemas/collage-broll/storyboard.schema.json",
+  "$id": "https://huxiang.local/schemas/hx-collage-video/storyboard.schema.json",
   "title": "Collage B-roll storyboard",
   "type": "object",
   "additionalProperties": false,

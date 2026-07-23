@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://huxiang.local/schemas/collage-broll/asset-collage.schema.json",
+  "$id": "https://huxiang.local/schemas/hx-collage-video/asset-collage.schema.json",
   "title": "Timeline collage asset plan",
   "type": "object",
   "additionalProperties": false,

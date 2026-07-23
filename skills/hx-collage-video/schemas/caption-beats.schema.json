@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://huxiang.local/schemas/collage-broll/caption-beats.schema.json",
+  "$id": "https://huxiang.local/schemas/hx-collage-video/caption-beats.schema.json",
   "title": "Collage B-roll caption beats",
   "type": "object",
   "additionalProperties": false,

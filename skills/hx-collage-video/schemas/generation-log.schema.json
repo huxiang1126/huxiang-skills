@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://huxiang.local/schemas/collage-broll/generation-log.schema.json",
+  "$id": "https://huxiang.local/schemas/hx-collage-video/generation-log.schema.json",
   "title": "Subscription generation log",
   "type": "object",
   "additionalProperties": false,

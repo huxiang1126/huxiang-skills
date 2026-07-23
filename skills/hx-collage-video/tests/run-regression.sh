@@ -3,7 +3,7 @@ set -euo pipefail
 
 skill_dir=$(cd "$(dirname "$0")/.." && pwd)
 fixtures_dir="$skill_dir/tests/fixtures"
-test_dir=$(mktemp -d /tmp/collage-broll-regression.XXXXXX)
+test_dir=$(mktemp -d /tmp/hx-collage-video-regression.XXXXXX)
 trap 'rm -rf "$test_dir"' EXIT
 
 expect_fail() {
@@ -156,4 +156,4 @@ expect_fail bash "$skill_dir/scripts/qa-audio.sh" \
 expect_fail bash "$skill_dir/scripts/mux-voiceover.sh" \
   "$test_dir/master.mp4" "$test_dir/narration.wav" "$test_dir/mux-without-duration.mp4"
 
-echo "PASS: collage-broll v2.3 regression suite"
+echo "PASS: hx-collage-video v2.3 regression suite"

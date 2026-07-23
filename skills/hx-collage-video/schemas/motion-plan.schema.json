@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://huxiang.local/schemas/collage-broll/motion-plan.schema.json",
+  "$id": "https://huxiang.local/schemas/hx-collage-video/motion-plan.schema.json",
   "title": "Timeline collage motion choreography",
   "type": "object",
   "additionalProperties": false,

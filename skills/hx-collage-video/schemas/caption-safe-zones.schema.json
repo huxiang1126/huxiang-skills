@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://huxiang.local/schemas/collage-broll/caption-safe-zones.schema.json",
+  "$id": "https://huxiang.local/schemas/hx-collage-video/caption-safe-zones.schema.json",
   "title": "Dynamic caption safe zones",
   "type": "object",
   "additionalProperties": false,
