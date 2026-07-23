@@ -1,0 +1,12 @@
+{
+  "version": "2.3.0",
+  "claims": [
+    {
+      "claim_id": "CL-01",
+      "claim": "This is a synthetic regression fixture.",
+      "status": "verified",
+      "sources": ["https://example.com/fixture"],
+      "story_use": "test only"
+    }
+  ]
+}

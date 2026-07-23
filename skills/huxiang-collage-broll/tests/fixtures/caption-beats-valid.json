@@ -1,0 +1,16 @@
+{
+  "version": "2.3.0",
+  "mode": "default",
+  "beats": [
+    {
+      "id": "cap-01",
+      "mode": "thesis",
+      "start": 0.2,
+      "end": 2.4,
+      "zh": "证据必须来自母版",
+      "en": "FINAL PIXELS / FINAL TRUTH",
+      "semantic_motion": "paper label locks to the upper edge",
+      "visual_avoid": ["courier-body"]
+    }
+  ]
+}

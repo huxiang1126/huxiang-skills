@@ -1,0 +1,18 @@
+{
+  "version": "2.3.0",
+  "coverage_required": true,
+  "beats": [
+    {
+      "beat_id": "S01-B01",
+      "scene_id": "S01",
+      "required": true,
+      "role": "courier",
+      "action": "carries a document across the canvas",
+      "story_function": "proves the visible action contract",
+      "min_visible_seconds": 1.5,
+      "state": "visible_in_master",
+      "assembly_route": "timeline_collage",
+      "master_window": {"start": 0.5, "end": 2.1}
+    }
+  ]
+}

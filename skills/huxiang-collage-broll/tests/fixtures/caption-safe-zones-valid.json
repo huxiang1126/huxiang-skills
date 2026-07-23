@@ -1,0 +1,25 @@
+{
+  "version": "2.3.0",
+  "canvas": {"width": 720, "height": 1280},
+  "caption_selector": ".hero-caption",
+  "intersection_threshold_px2": 0,
+  "sample_interval_seconds": 0.3,
+  "beats": [
+    {
+      "caption_id": "cap-01",
+      "selector": "#cap-01",
+      "start": 0.2,
+      "end": 2.4,
+      "regions": [
+        {
+          "id": "courier-body",
+          "kind": "person_action",
+          "keyframes": [
+            {"at": 0.2, "x": 80, "y": 500, "width": 200, "height": 500},
+            {"at": 2.4, "x": 430, "y": 500, "width": 200, "height": 500}
+          ]
+        }
+      ]
+    }
+  ]
+}

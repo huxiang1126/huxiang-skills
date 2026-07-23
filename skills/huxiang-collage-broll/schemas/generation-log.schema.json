@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huxiang.local/schemas/collage-broll/generation-log.schema.json",
+  "title": "Subscription generation log",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "items"],
+  "properties": {
+    "version": {"const": "2.3.0"},
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item_id",
+          "beat_ids",
+          "surface",
+          "visible_model_label",
+          "method",
+          "prompt_file",
+          "attempts",
+          "status"
+        ],
+        "properties": {
+          "item_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+          "beat_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string"},
+            "uniqueItems": true
+          },
+          "surface": {"enum": ["gemini", "google_flow", "grok", "hyperframes", "other"]},
+          "visible_model_label": {"type": "string"},
+          "method": {
+            "enum": [
+              "first_last",
+              "first_image",
+              "timeline_collage",
+              "hyperframes_native",
+              "short_video_overlay"
+            ]
+          },
+          "prompt_file": {"type": "string"},
+          "input_method": {"enum": ["paste", "keyboard", "upload_only", "local"]},
+          "attempts": {"type": "integer", "minimum": 0},
+          "status": {"enum": ["planned", "submitted", "generated", "downloaded", "verified", "failed"]},
+          "local_file": {"type": "string"},
+          "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+          "notes": {"type": "string"}
+        }
+      }
+    }
+  }
+}

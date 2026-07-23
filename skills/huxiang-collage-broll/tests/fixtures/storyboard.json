@@ -1,0 +1,21 @@
+{
+  "version": "2.3.0",
+  "scenes": [
+    {
+      "scene_id": "S01",
+      "start": 0,
+      "duration": 3,
+      "narration": "测试旁白。",
+      "claim_ids": ["CL-01"],
+      "narrative_job": "prove the QA fixture",
+      "visual_proposition": "a paper figure crosses the canvas",
+      "continuity_anchors": ["cream-paper"],
+      "motion_method": "timeline_collage",
+      "asset_collage": "asset-collage-valid.json",
+      "motion_plan": "motion-plan-valid.json",
+      "beat_ids": ["S01-B01"],
+      "caption_group": "C01",
+      "transition": "cut"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huxiang.local/schemas/collage-broll/audio-manifest.schema.json",
+  "title": "Audio provenance manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "background_music_authorized", "tracks", "mixes", "reference_mixes"],
+  "properties": {
+    "version": {"const": "2.3.0"},
+    "background_music_authorized": {"type": "boolean"},
+    "tracks": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "path", "sha256"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+          "kind": {"enum": ["narration", "dialogue", "sfx", "ambience", "bgm"]},
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+          "provider": {"type": "string"},
+          "voice_id": {"type": "string"},
+          "voice_authorization": {
+            "enum": ["user_owned", "authorized_clone", "stock_voice", "local_synthetic"]
+          },
+          "license_credit": {"type": "string"}
+        }
+      }
+    },
+    "mixes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["no_music"],
+      "properties": {
+        "no_music": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"},
+          "uniqueItems": true
+        },
+        "music": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "reference_mixes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["no_music"],
+      "properties": {
+        "no_music": {"$ref": "#/$defs/referenceMix"},
+        "music": {"$ref": "#/$defs/referenceMix"}
+      }
+    }
+  },
+  "$defs": {
+    "referenceMix": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}
+      }
+    }
+  }
+}

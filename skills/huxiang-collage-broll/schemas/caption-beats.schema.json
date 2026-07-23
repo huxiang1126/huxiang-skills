@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huxiang.local/schemas/collage-broll/caption-beats.schema.json",
+  "title": "Collage B-roll caption beats",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "mode", "beats"],
+  "properties": {
+    "version": {"const": "2.3.0"},
+    "mode": {"enum": ["default", "caption_led"]},
+    "beats": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "mode",
+          "start",
+          "end",
+          "zh",
+          "semantic_motion",
+          "visual_avoid"
+        ],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+          "mode": {"enum": ["narration", "thesis", "date_event"]},
+          "start": {"type": "number", "minimum": 0},
+          "end": {"type": "number", "exclusiveMinimum": 0},
+          "zh": {"type": "string", "minLength": 1},
+          "en": {"type": "string"},
+          "semantic_motion": {"type": "string", "minLength": 1},
+          "visual_avoid": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          },
+          "claim_ids": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          },
+          "qualification": {"type": "string", "minLength": 1},
+          "notes": {"type": "string"}
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"mode": {"const": "date_event"}}},
+            "then": {"required": ["claim_ids"], "properties": {"claim_ids": {"minItems": 1}}}
+          }
+        ]
+      }
+    }
+  }
+}

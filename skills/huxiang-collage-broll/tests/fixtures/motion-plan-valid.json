@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "scene_id": "S01",
+  "duration": 3,
+  "strategy": "The courier enters, carries the message across the paper field, and holds for the cut.",
+  "motion_budget": {
+    "dominant_track_ids": ["courier-motion"],
+    "max_simultaneous_high_intensity": 1,
+    "quiet_windows": [
+      {
+        "start": 2.4,
+        "end": 3,
+        "reason": "read the delivered result"
+      }
+    ]
+  },
+  "tracks": [
+    {
+      "track_id": "courier-motion",
+      "layer_id": "courier",
+      "importance": "hero",
+      "end_behavior": "hold_to_cut",
+      "phases": [
+        {
+          "phase_id": "courier-enter",
+          "phase": "enter",
+          "start": 0.2,
+          "end": 0.7,
+          "driver": "narration",
+          "family": "transform",
+          "runtime": "gsap",
+          "rule": "paper-slide-settle",
+          "intention": "establish the courier and travel direction",
+          "intensity": 3,
+          "finite": true
+        },
+        {
+          "phase_id": "courier-carry",
+          "phase": "action",
+          "start": 0.7,
+          "end": 2.3,
+          "driver": "manual",
+          "family": "pose_swap",
+          "runtime": "gsap",
+          "rule": "two-pose-carry",
+          "intention": "show delivery rather than a static portrait",
+          "intensity": 2,
+          "finite": true
+        },
+        {
+          "phase_id": "courier-settle",
+          "phase": "settle",
+          "start": 2.3,
+          "end": 2.4,
+          "driver": "manual",
+          "family": "transform",
+          "runtime": "gsap",
+          "rule": "impact-decay",
+          "intention": "resolve motion before the reading window",
+          "intensity": 2,
+          "finite": true
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "event_id": "delivery-lock",
+      "category": "impact",
+      "effect": "a short paper compression marks delivery",
+      "cause": "the courier reaches the destination",
+      "start": 2.3,
+      "end": 2.4,
+      "targets": ["courier"],
+      "runtime": "gsap",
+      "intensity": 2,
+      "audio_source": "none",
+      "sound_policy": "silent_by_design"
+    }
+  ]
+}

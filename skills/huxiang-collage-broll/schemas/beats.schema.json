@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huxiang.local/schemas/collage-broll/beats.schema.json",
+  "title": "Collage B-roll lifecycle beat ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "coverage_required", "beats"],
+  "properties": {
+    "version": {"const": "2.3.0"},
+    "coverage_required": {"type": "boolean"},
+    "beats": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/beat"}
+    }
+  },
+  "$defs": {
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": {"type": "number", "minimum": 0},
+        "end": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "beat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "beat_id",
+        "scene_id",
+        "required",
+        "role",
+        "action",
+        "story_function",
+        "min_visible_seconds",
+        "state",
+        "assembly_route"
+      ],
+      "properties": {
+        "beat_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+        "scene_id": {"type": "string", "minLength": 1},
+        "required": {"type": "boolean"},
+        "role": {"type": "string", "minLength": 1},
+        "action": {"type": "string", "minLength": 1},
+        "story_function": {"type": "string", "minLength": 1},
+        "min_visible_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "state": {
+          "enum": [
+            "planned",
+            "asset_generated",
+            "visible_in_scene",
+            "visible_in_master",
+            "intentionally_removed",
+            "missing",
+            "unclear"
+          ]
+        },
+        "assembly_route": {
+          "enum": [
+            "first_last",
+            "first_image",
+            "timeline_collage",
+            "hyperframes_native",
+            "short_video_overlay"
+          ]
+        },
+        "asset": {"type": "string"},
+        "asset_sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+        "scene_window": {"$ref": "#/$defs/window"},
+        "master_window": {"$ref": "#/$defs/window"},
+        "removal_reason": {"type": "string", "minLength": 1},
+        "notes": {"type": "string"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"state": {"const": "visible_in_scene"}}},
+          "then": {"required": ["scene_window"]}
+        },
+        {
+          "if": {"properties": {"state": {"const": "visible_in_master"}}},
+          "then": {"required": ["master_window"]}
+        },
+        {
+          "if": {"properties": {"state": {"const": "intentionally_removed"}}},
+          "then": {
+            "required": ["removal_reason"],
+            "properties": {"required": {"const": false}}
+          }
+        }
+      ]
+    }
+  }
+}

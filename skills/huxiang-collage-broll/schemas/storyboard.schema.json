@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huxiang.local/schemas/collage-broll/storyboard.schema.json",
+  "title": "Collage B-roll storyboard",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "scenes"],
+  "properties": {
+    "version": {"const": "2.3.0"},
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "scene_id",
+          "start",
+          "duration",
+          "narration",
+          "narrative_job",
+          "visual_proposition",
+          "continuity_anchors",
+          "motion_method",
+          "beat_ids",
+          "caption_group",
+          "transition"
+        ],
+        "properties": {
+          "scene_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+          "start": {"type": "number", "minimum": 0},
+          "duration": {"type": "number", "exclusiveMinimum": 0},
+          "narration": {"type": "string"},
+          "claim_ids": {
+            "type": "array",
+            "items": {"type": "string"},
+            "uniqueItems": true
+          },
+          "narrative_job": {"type": "string", "minLength": 1},
+          "visual_proposition": {"type": "string", "minLength": 1},
+          "continuity_anchors": {
+            "type": "array",
+            "items": {"type": "string"},
+            "uniqueItems": true
+          },
+          "motion_method": {
+            "enum": ["first_last", "first_image", "timeline_collage", "hyperframes_native"]
+          },
+          "beat_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string"},
+            "uniqueItems": true
+          },
+          "first_frame": {"type": "string"},
+          "last_frame": {"type": "string"},
+          "motion_prompt": {"type": "string"},
+          "asset_collage": {"type": "string"},
+          "motion_plan": {"type": "string"},
+          "subscription_route": {"type": "string"},
+          "sfx_cue": {"type": "array"},
+          "caption_group": {"type": "string"},
+          "transition": {"type": "string"}
+        }
+      }
+    }
+  }
+}
