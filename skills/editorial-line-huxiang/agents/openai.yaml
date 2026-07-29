@@ -1,0 +1,5 @@
+interface:
+  display_name: "Editorial line huxiang"
+  short_description: "Single-pass warm-paper Huxiang editorial line visuals"
+  default_prompt: "Use $editorial-line-huxiang to create a complete branded editorial page with text and illustration generated together."
+  brand_color: "#8FA58A"
