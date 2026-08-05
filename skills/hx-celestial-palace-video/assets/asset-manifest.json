@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "music": {
+    "file": "music/celestial-palace-theme.mp3",
+    "source_filename": "7月29日 (2)(3).mp3",
+    "source_role": "user-supplied production music",
+    "duration_seconds": 65.436708,
+    "codec": "mp3",
+    "sample_rate_hz": 44100,
+    "channels": 2,
+    "sha256": "390240fd6d36f66d76de19003e85122eeb0030150eea661716e12625d1b4fb51",
+    "redistribution_authorized_by_user": true,
+    "authorization_basis": "The user explicitly requested that this supplied audio file be bundled and pushed to GitHub in this Skill creation task.",
+    "license_claim": null,
+    "usage_note": "Trim to the final film length; do not loop by default. Public distribution requires the user to hold applicable music rights."
+  },
+  "watermark": {
+    "file": "watermark/hx-celestial-order.png",
+    "source_filename": "png.png",
+    "source_role": "user-supplied brand watermark",
+    "source_canvas": "2480x3508 RGBA",
+    "source_effective_alpha_bbox": "x=913,y=3048,w=655,h=170",
+    "trimmed_canvas": "687x202 RGBA",
+    "trim_padding_pixels": 16,
+    "sha256": "9b9342185be9d77951c2e83ff46bddd7508524f5c9fb916fa7a3da585ac1b63d",
+    "default_render": {
+      "width_fraction": 0.146,
+      "center_x_fraction": 0.382,
+      "bottom_margin_fraction": 0.05,
+      "opacity": 0.78,
+      "shadow_offset_pixels_at_1080_width": 2
+    },
+    "usage_note": "Use clean unwatermarked stills for Veo. Add the mark to still deliverables and as a fixed HyperFrames final-composite layer."
+  }
+}

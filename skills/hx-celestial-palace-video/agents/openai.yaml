@@ -1,0 +1,4 @@
+interface:
+  display_name: "HX Celestial Palace Video"
+  short_description: "Nine-shot celestial-palace film workflow"
+  default_prompt: "Use $hx-celestial-palace-video to create a nine-shot 9:16 celestial-palace film from image generation through Veo motion and HyperFrames delivery."
