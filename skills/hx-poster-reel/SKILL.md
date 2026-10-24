@@ -1,6 +1,6 @@
 ---
 name: hx-poster-reel
-description: Make a fast editorial poster-reel fashion film from SKU or street photos and a music track, the way ON FOOT was made - dozens of designed poster layouts (giant condensed headlines with a cut-out figure in front, colour-split panels, serif italics, mirrored headlines, moulded-glass texture, item lists) cut on the beat, typeset as HTML and rendered with headless Chrome. Use for 海报快闪, 版式快闪, 作品集快翻, poster reel, grid layout typography reel, editorial poster film, BECOMING-style reel, ON FOOT 的做法. Default 4:5, about 30 s.
+description: Make a fast editorial poster-reel fashion film from SKU or street photos and a music track, the way ON FOOT was made - dozens of designed poster layouts (giant condensed headlines with a cut-out figure in front, colour-split panels, serif italics, mirrored headlines, moulded-glass texture, item lists) cut on the beat, typeset as HTML and rendered with headless Chrome. Use for 海报快闪, 版式快闪, 作品集快翻, poster reel, grid layout typography reel, editorial poster film, ON FOOT 的做法. Default 4:5, about 30 s.
 ---
 
 # hx-poster-reel
@@ -15,7 +15,7 @@ description: Make a fast editorial poster-reel fashion film from SKU or street p
 
 1. **先量参考，不要猜。**
    用 `scripts/measure_ref.py` 拆出每一帧、每一刀、每个镜头的时长。
-   ON FOOT 的参考在页面上显示“0:20”，量出来其实是 19 张海报、每张 0.2 秒的 GIF，“0:20”是发帖时间。
+   ON FOOT 的参考看上去像一段 20 秒的视频，量出来其实是 19 张海报、每张 0.2 秒的 GIF。
    要抄的是它的语法：
    - 每张停多久；
    - 版式有哪几类；

@@ -2,8 +2,7 @@
 """Measure a reference reel before copying anything from it.
 
 Writes ref_frames.jpg (every frame, or one per cut for long clips) and prints the cut list with each shot's length,
-plus the frame rate and the shortest/longest/median shot. Run it first: ON FOOT's reference looked like a 20 s video on
-the page, and turned out to be 19 posters at 0.2 s each (a 3.8 s GIF).
+plus the frame rate and the shortest/longest/median shot. Run it first: ON FOOT's reference looked like a 20 s video, and turned out to be 19 posters at 0.2 s each (a 3.8 s GIF).
 
 Usage: python measure_ref.py reference.mp4 [out_dir]
 """

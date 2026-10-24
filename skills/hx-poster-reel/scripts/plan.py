@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ON FOOT — a rapid poster reel after @47thegreat_'s BECOMING, 4:5, cut to the user's 140 BPM hip-hop track
+"""ON FOOT — a rapid poster reel 4:5, cut to the user's 140 BPM hip-hop track
 (assets/song.wav).
 
 Timing: the video starts two bars before the drop (song 11.877 s), so the drop lands at 3.43 s. Four 16-beat
