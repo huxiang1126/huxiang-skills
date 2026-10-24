@@ -1,0 +1,4 @@
+interface:
+  display_name: "HX Poster Reel"
+  short_description: "把 SKU 街拍和一首歌做成卡点海报快闪服装片"
+  default_prompt: "Use $hx-poster-reel to make a 4:5 editorial poster-reel fashion film from these photos and this track. Measure the reference with measure_ref.py and the track with beatmap.py first, then decide what to keep from the ON FOOT method; typeset every poster as HTML, review contact sheets before assembling, and cut on the beat."

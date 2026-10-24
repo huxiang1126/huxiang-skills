@@ -1,0 +1,9 @@
+{
+  "name": "hx-poster-reel-tools",
+  "private": true,
+  "type": "module",
+  "description": "Headless Chrome poster renderer for hx-poster-reel (shoot.mjs).",
+  "dependencies": {
+    "puppeteer-core": "^25.12.0"
+  }
+}

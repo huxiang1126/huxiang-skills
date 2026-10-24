@@ -1,0 +1,323 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: NY; src: url("file:///System/Library/Fonts/NewYork.ttf"); }
+@font-face { font-family: NYI; src: url("file:///System/Library/Fonts/NewYorkItalic.ttf"); }
+@font-face { font-family: NotoSC; src: url("../fonts/NotoSansSC.ttf"); }   /* Noto Sans SC (OFL), download from Google Fonts into fonts/ */
+@font-face { font-family: SFM; src: url("file:///System/Library/Fonts/SFNSMono.ttf"); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1350px; overflow: hidden; background: #000; }
+#p { position: relative; width: 1080px; height: 1350px; overflow: hidden; font-family: "Helvetica Neue"; -webkit-font-smoothing: antialiased; }
+.a { position: absolute; }
+.ph { position: absolute; overflow: hidden; }
+.ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cut { position: absolute; }
+.cut img { height: 100%; display: block; }
+.lab { position: absolute; font-weight: 700; font-size: 17px; line-height: 1.02; text-transform: uppercase; letter-spacing: .005em; white-space: nowrap; }
+.lab.r { text-align: right; }
+.lab.c { text-align: center; }
+.st { position: absolute; }
+.st .l { display: block; width: max-content; font-weight: 900; font-stretch: condensed; line-height: .8; text-transform: uppercase; white-space: nowrap; letter-spacing: -.005em; }
+.hl { position: absolute; font-weight: 900; font-stretch: condensed; line-height: .8; text-transform: uppercase; white-space: nowrap; letter-spacing: -.005em; }
+.sf { font-family: NY; font-variation-settings: "opsz" 96, "wght" 400; line-height: .95; letter-spacing: -.02em; white-space: nowrap; }
+.sfi { font-family: NYI; font-variation-settings: "opsz" 96, "wght" 400; }
+.bd { position: absolute; font-weight: 500; font-size: 15px; line-height: 1.3; text-align: justify; }
+.bdu { position: absolute; font-weight: 700; font-size: 19px; line-height: 1.07; text-align: justify; text-transform: uppercase; }
+.mono { position: absolute; font-family: SFM; font-size: 13px; letter-spacing: .04em; line-height: 1.5; text-transform: uppercase; white-space: nowrap; }
+.cjk { font-family: NotoSC; font-variation-settings: "wght" 500; }
+.row { position: absolute; display: flex; justify-content: space-between; text-transform: uppercase; white-space: nowrap; }
+.noise { position: absolute; inset: 0; background: url("../img/fx/noise.png"); mix-blend-mode: overlay; opacity: .55; }
+</style>
+</head>
+<body>
+<div id="p"></div>
+<script>
+const W = 1080, H = 1350, M = 40;
+const IMG = n => `../img/${n}.jpg`, CUT = n => `../img/cut_${n}.png`, FX = n => `../img/fx/${n}.jpg`;
+const br = t => String(t).replace(/\n/g, "<br>");
+
+function lab(t, x, y, o = {}) {
+  const cls = o.align ? "lab " + o.align : "lab";
+  const pos = o.align === "r" ? `right:${W - x}px;` : (o.align === "c" ? `left:${x}px;transform:translateX(-50%);` : `left:${x}px;`);
+  return `<div class="${cls}" style="${pos}top:${y}px;color:${o.c || "inherit"};font-size:${o.fs || 17}px;${o.s || ""}">${br(t)}</div>`;
+}
+function photo(src, o = {}) {
+  const { x = 0, y = 0, w = W, h = H, pos = "50% 35%", z = 1, bw = false, s = "" } = o;
+  const f = bw ? "filter:grayscale(1) contrast(1.2) brightness(1.03);" : "";
+  return `<div class="ph" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;${s}"><img src="${src}" style="object-position:${pos};transform:scale(${z});transform-origin:${pos};${f}"></div>`;
+}
+function cutout(name, o = {}) {
+  const { x = W / 2, bottom = 0, h = 1250, bw = false, s = "", z = 1 } = o;
+  const f = bw ? "filter:grayscale(1) contrast(1.25);" : "";
+  return `<div class="cut" style="left:${x}px;bottom:${bottom}px;height:${h}px;transform:translateX(-50%) scale(${z});transform-origin:50% 100%;${s}"><img src="${CUT(name)}" style="${f}"></div>`;
+}
+// stacked headline lines sharing one size: as wide as w allows, no taller than h; anchored at y (top) or bottom
+function hst(lines, o = {}) {
+  const g = o.g || ("g" + Math.random().toString(36).slice(2, 7));
+  const pos = (o.bottom !== undefined ? `bottom:${o.bottom}px;` : `top:${o.y}px;`) + (o.right !== undefined ? `right:${o.right}px;text-align:right;` : `left:${o.x}px;`);
+  return `<div class="st" style="${pos}color:${o.c || "inherit"};${o.s || ""}">` + lines.map(t => `<div class="l fit" data-w="${o.w}" data-h="${o.h || 9999}" data-n="${lines.length}" data-g="${g}" style="${o.right !== undefined ? "margin-left:auto;" : ""}">${t}</div>`).join("") + `</div>`;
+}
+// a headline that is sized to fill a width (data-w), one line per element
+function hl(t, x, y, w, o = {}) {
+  return `<div class="hl fit" data-w="${w}" data-align="${o.align || "l"}" data-x="${x}" style="top:${y}px;left:${x}px;color:${o.c || "inherit"};${o.s || ""}">${t}</div>`;
+}
+function sf(l1, l2, x, y, fs, o = {}) {
+  const a = o.align === "r" ? "right" : "left";
+  const pos = o.align === "r" ? `right:${W - x}px;` : `left:${x}px;`;
+  return `<div class="a sf" style="${pos}top:${y}px;font-size:${fs}px;text-align:${a};color:${o.c || "inherit"}">${l1}${l2 ? `<br><span class="sfi" style="display:block;text-align:${o.l2 || "right"}">${l2}</span>` : ""}</div>`;
+}
+function rows(lines, x, y, w, o = {}) {
+  return lines.map((ln, i) => `<div class="row" style="left:${x}px;top:${y + i * (o.gap || 38)}px;width:${w}px;font-size:${o.fs || 22}px;font-weight:${(o.bold || []).includes(i) ? 800 : 500};letter-spacing:.02em;color:${o.c || "inherit"}">${ln.split(" ").map(wd => `<span>${wd}</span>`).join("")}</div>`).join("");
+}
+
+const T = {
+  // big headline behind a large cut-out figure (MUSIC & DESIGN / KING OF ROCK ROLL)
+  cover(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:${c.bg}"></div>`;
+    h += hst([t.h1, t.h2], { x: M - 4, y: 120, w: W - 2 * M + 8, h: 820, c: c.fg });
+    h += cutout(s.cut, { x: s.cx || W / 2, h: s.ch || 1180, bottom: s.cb ?? -40, z: s.z || 1, bw: s.bw });
+    h += lab(t.tl || "HU·X\nPROJECT ON FOOT", M, M, { c: c.fg }) + lab(t.tc || "HONG KONG\nAW 2026", W / 2, M, { c: c.fg, align: "c" }) + lab(t.tr || "LOOK " + t.n + "\nSTREET EDIT", W - M, M, { c: c.fg, align: "r" });
+    h += lab(t.bl || "STREET, LAYOUT\nTYPOGRAPHY", M, H - 76, { c: c.fg }) + lab(t.br || "EP.01", W - M, H - 59, { c: c.fg, align: "r" });
+    if (t.side) h += `<div class="bd" style="left:${W - 250}px;top:1110px;width:220px;color:${c.fg};font-weight:700;font-size:16px;line-height:1.15;text-align:left">${br(t.side)}</div>`;
+    return h;
+  },
+  // nav bar, a headline split left / right around the figure, figure in front
+  web(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:${c.bg}"></div>`;
+    h += hst([t.h1], { x: M, y: 250, w: 470, h: 330, c: c.fg, g: "web" }) + hst([t.h2], { x: M, y: 640, w: 470, h: 330, c: c.fg, g: "web" });
+    h += cutout(s.cut, { x: s.cx || 560, h: s.ch || 1220, bottom: -30, z: s.z || 1 });
+    h += lab("HOME\nLOOKS\nCITY", M, M, { c: c.fg }) + lab("PROJECT\nON FOOT", 330, M, { c: c.fg }) + lab("LOOK " + t.n + "\n" + (t.lk || ""), 560, M, { c: c.fg }) + lab("HONG KONG\nAW 2026", W - M, M, { c: c.fg, align: "r" });
+    h += lab("HU·X", M, H - 59, { c: c.fg }) + lab((t.lkzh || ""), W - M, H - 62, { c: c.fg, align: "r", s: "font-family:NotoSC;font-weight:500;text-transform:none" });
+    return h;
+  },
+  // textured glass over the photo, a grid of small labels (the opening frame of the reference)
+  glass(s) { return T._grid(s, FX("glass_" + s.fx)); },
+  clear(s) { return T._grid(s, FX("clear_" + s.fx), true); },
+  _grid(s, src, clear) {
+    const c = s.c, t = s.t;
+    let h = `<div class="ph" style="inset:0"><img src="${src}" style="transform:scale(${s.z || 1})"></div>`;
+    const f = "#f6efe6";
+    h += lab("HU·X\nPROJECT ON FOOT", M, M, { c: f }) + sf(t.s1, t.s2, W - M, 30, 66, { c: f, align: "r" });
+    h += lab(t.m1 || "QUIET STREET,\nLOUD LIGHT", M, 640, { c: f }) + lab(t.m2 || "LOOK " + t.n + "\nHONG KONG", W / 2, 640, { c: f, align: "c" }) + lab(t.m3 || "SHOT BETWEEN\nTRAFFIC LIGHTS", W - M, 640, { c: f, align: "r" });
+    h += lab("STREET, LAYOUT\nTYPOGRAPHY", M, H - 76, { c: f }) + lab("EP.01", W - M, H - 59, { c: f, align: "r" });
+    return h;
+  },
+  // cream panel with a serif title, a small inset and a paragraph; the photo on the right
+  split(s) {
+    const c = s.c, t = s.t, pw = 520;
+    let h = `<div class="a" style="left:0;top:0;width:${pw}px;height:${H}px;background:${c.pn}"></div>`;
+    h += photo(IMG(s.img), { x: pw, w: W - pw, pos: s.pos || "50% 30%", z: s.z || 1 });
+    h += sf(t.s1, t.s2, pw - 34, 34, 74, { c: c.ink, align: "r", l2: "right" });
+    h += photo(IMG(s.img2 || s.img), { x: 34, y: 250, w: 150, h: 200, pos: s.pos2 || "50% 30%" });
+    h += `<div class="bd" style="left:230px;top:520px;width:250px;color:${c.ink}">${t.p}</div>`;
+    h += lab("HU·X\nPROJECT ON FOOT", 34, H - 76, { c: c.ink, fs: 15 }) + lab("LOOK " + t.n, pw - 34, H - 59, { c: c.ink, fs: 15, align: "r" });
+    return h;
+  },
+  // photo left, a solid colour panel with a serif title right
+  half(s) {
+    const c = s.c, t = s.t, pw = 540;
+    let h = photo(IMG(s.img), { w: pw, pos: s.pos || "50% 30%", z: s.z || 1 });
+    h += `<div class="a" style="left:${pw}px;top:0;width:${W - pw}px;height:${H}px;background:${c.ac}"></div>`;
+    h += sf(t.s1, t.s2, pw + 36, 40, 56, { c: c.on, l2: "left" });
+    h += lab("LOOK " + t.n, W - M, M, { c: c.on, align: "r", fs: 14 });
+    h += `<div class="bd" style="left:${pw + 36}px;top:${H - 260}px;width:300px;color:${c.on};font-size:13px">${t.p}</div>`;
+    h += lab(t.itemsShort || "", pw + 36, H - 59, { c: c.on, fs: 13 });
+    return h;
+  },
+  // full-bleed photo, three tracked rows of words across it
+  rows(s) {
+    const c = s.c, t = s.t;
+    let h = photo(IMG(s.img), { pos: s.pos || "50% 32%", z: s.z || 1 });
+    h += `<div class="a" style="inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 55%,rgba(0,0,0,.35))"></div>`;
+    h += lab("HU·X\nPROJECT ON FOOT", M, M, { c: "#fff" }) + lab("LOOK " + t.n + "\n" + t.lk, W - M, M, { c: "#fff", align: "r" });
+    h += rows(t.rows, M, 760, W - 2 * M, { c: "#fff", bold: [1] });
+    h += lab("ON FOOT\nHONG KONG", M, H - 76, { c: "#fff" }) + lab("HU·X\nAW 2026", W - M, H - 76, { c: "#fff", align: "r" });
+    return h;
+  },
+  // a colour field, a headline filling the top, the photo in a window below (FROM FIGMA TO FRAMER)
+  headtop(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:${c.ac}"></div>`;
+    h += hst([t.h1, t.h2], { x: M - 6, y: 40, w: W - 2 * M + 12, h: 590, c: c.on });
+    h += photo(IMG(s.img), { x: 330, y: 560, w: 420, h: 560, pos: s.pos || "50% 25%", z: s.z || 1 });
+    h += `<div class="mono" style="left:${M}px;top:${H - 210}px;color:${c.on}">${br(t.mono || "LOOK " + t.n + " · HONG KONG\nSHOT BETWEEN TRAFFIC LIGHTS\nFOUR LOOKS · ONE CITY")}</div>`;
+    h += lab("PROJECT\nON FOOT", 790, H - 210, { c: c.on, fs: 14 }) + lab("LOOK\n" + t.n, W - M, H - 210, { c: c.on, fs: 14, align: "r" });
+    h += lab("HU·X", M, H - 59, { c: c.on, fs: 14 }) + lab("EP.01", W - M, H - 59, { c: c.on, fs: 14, align: "r" });
+    return h;
+  },
+  // photo left, a neon panel with a small square inset and a bold justified block
+  neon(s) {
+    const c = s.c, t = s.t, pw = 470;
+    let h = photo(IMG(s.img), { w: pw, pos: s.pos || "50% 30%", z: s.z || 1 });
+    h += `<div class="a" style="left:${pw}px;top:0;width:${W - pw}px;height:${H}px;background:${c.neon}"></div>`;
+    h += lab("PROJECT\nON FOOT", pw + 30, M, { c: c.neonInk, fs: 15 }) + lab("HU·X\nLOOK " + t.n, W - M, M, { c: c.neonInk, fs: 15, align: "r" });
+    h += photo(IMG(s.img2 || s.img), { x: pw + 175, y: 330, w: 260, h: 260, pos: s.pos2 || "50% 25%" });
+    h += `<div class="bdu" style="left:${pw + 30}px;top:${H - 330}px;width:${W - pw - 70}px;color:${c.neonInk}">${t.p}</div>`;
+    h += photo(IMG(s.img3 || s.img), { x: pw + 30, y: H - 105, w: 52, h: 70, pos: "50% 25%" });
+    return h;
+  },
+  // a navy panel of justified copy in a hot colour, the photo right
+  navy(s) {
+    const c = s.c, t = s.t, pw = 540;
+    let h = `<div class="a" style="left:0;top:0;width:${pw}px;height:${H}px;background:${c.navy}"></div>`;
+    h += photo(IMG(s.img), { x: pw, w: W - pw, pos: s.pos || "50% 30%", z: s.z || 1 });
+    h += lab("PROJECT\nON FOOT", 30, M, { c: c.navyInk, fs: 15 }) + lab("HU·X\nLOOK " + t.n, pw - 30, M, { c: c.navyInk, fs: 15, align: "r" });
+    h += photo(IMG(s.img2 || s.img), { x: 30, y: 300, w: 110, h: 110, pos: s.pos2 || "50% 25%" });
+    h += `<div class="bdu" style="left:${170}px;top:300px;width:${pw - 200}px;color:${c.navyInk};font-size:18px">${t.p2}</div>`;
+    return h;
+  },
+  // black-and-white profile, a black headline on light grey (PROJECT BECOMING)
+  profile(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:#e9e9e7"></div>`;
+    h += photo(IMG(s.img), { x: 380, w: W - 380, pos: s.pos || "50% 30%", z: s.z || 1, bw: true });
+    h += `<div class="a" style="left:380px;top:0;width:200px;height:${H}px;background:linear-gradient(90deg,#e9e9e7,rgba(233,233,231,0))"></div>`;
+    h += hst([t.h1, t.h2], { x: M, y: 110, w: 470, h: 470, c: "#0c0c0c" });
+    h += lab("ALL\nPHOTOS\nTAKEN\nON THE\nSTREET", M, 640, { c: "#0c0c0c", fs: 15 });
+    h += `<div class="a" style="left:${M}px;top:${H - 300}px;color:#0c0c0c;font-weight:700;font-size:18px;line-height:1.15">LOOK ${t.n}<br><span style="font-weight:400">${br(t.itemsEn)}</span></div>`;
+    h += lab("HU·X  ·  PROJECT ON FOOT", M, H - 59, { c: "#0c0c0c", fs: 15 });
+    return h;
+  },
+  // black page, a black-and-white photo top right, two paragraphs (whitespace exploration)
+  blackpage(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:#070707"></div>`;
+    h += photo(IMG(s.img), { x: 560, y: 70, w: 300, h: 400, pos: s.pos || "50% 25%", z: s.z || 1, bw: true });
+    h += `<div class="bd" style="left:880px;top:70px;width:160px;color:#ddd;font-size:13px;text-align:left">${t.p3a}</div>`;
+    h += `<div class="bd" style="left:540px;top:${H - 520}px;width:470px;color:#ddd;font-size:15px;text-align:right">${t.p3b}</div>`;
+    h += lab("WHITESPACE\nEXPLORATION", M, M, { c: "#ddd", fs: 14 }) + lab("HU·X — LOOK " + t.n, M, H - 59, { c: "#ddd", fs: 14 }) + lab("PROJECT ON FOOT", W - M, H - 59, { c: "#ddd", fs: 14, align: "r" });
+    return h;
+  },
+  // white page, a nav, three bold lines, a black-and-white band below
+  white(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:#fff"></div>`;
+    h += lab("RANDOM\nEXPLORATION", M, M, { c: "#111", fs: 14 }) + lab("HU·X\nON FOOT", 360, M, { c: "#111", fs: 14 }) + lab("LOOKS", 640, M, { c: "#111", fs: 14 }) + lab("CITY", 800, M, { c: "#111", fs: 14 }) + lab("CONTACT", W - M, M, { c: "#111", fs: 14, align: "r" });
+    h += `<div class="a" style="left:${M}px;top:520px;color:#111;font-weight:800;font-size:44px;line-height:1.0;letter-spacing:-.01em">${br(t.w3)}</div>`;
+    h += lab("LOOK " + t.n + "\n" + t.lk, 640, 600, { c: "#111", fs: 14 }) + lab("@虎小象", W - M, 616, { c: "#111", fs: 14, align: "r", s: "font-family:NotoSC;font-weight:500;" });
+    h += photo(IMG(s.img), { y: 760, h: H - 760, pos: s.pos || "50% 30%", z: s.z || 1, bw: true });
+    return h;
+  },
+  // electric blue field, a black-and-white photo block, a condensed headline bottom-left (MOTION DESIGNER)
+  bluefield(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:${c.blue}"></div>`;
+    h += photo(IMG(s.img), { x: 330, y: 0, w: 640, h: 760, pos: s.pos || "50% 25%", z: s.z || 1, bw: true });
+    h += lab(t.lk, 330, 790, { c: "#0b0b0b", fs: 16 }) + lab("LOOK " + t.n, 970, 790, { c: "#0b0b0b", fs: 16, align: "r" });
+    h += hst([t.h1, t.h2], { x: M, bottom: 34, w: 640, h: 400, c: "#0b0b0b" });
+    return h;
+  },
+  // full-bleed close detail, a big logotype
+  logo(s) {
+    const c = s.c, t = s.t;
+    let h = photo(IMG(s.img), { pos: s.pos || "50% 45%", z: s.z || 1.5 });
+    h += `<div class="a" style="inset:0;background:rgba(0,0,0,.12)"></div>`;
+    h += `<div class="a" style="left:60px;top:560px;color:#fff;font-weight:700;font-size:150px;letter-spacing:-.03em;line-height:1">HU·X<span style="font-size:70px;vertical-align:top;font-weight:500">©</span></div>`;
+    h += lab("PROJECT\nON FOOT\n\nLOOK " + t.n, 640, 560, { c: "#fff", fs: 16 }) + lab(t.detail, 640, 740, { c: "#fff", fs: 16 });
+    h += lab("PROJECT\nON FOOT", 640, H - 280, { c: "#fff", fs: 14 }) + lab("STREET, LAYOUT\n& TYPOGRAPHY\nEP.01", W - M, H - 280, { c: "#fff", fs: 14, align: "r" });
+    h += lab("47.", M, M, { c: "#fff", fs: 14, s: "display:none" });
+    return h;
+  },
+  // headline top and its mirror below, a black-and-white cut-out across the middle (UNSOLICITED PASSION)
+  mirror(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:#1b1b1a"></div><div class="noise"></div>`;
+    h += hst([t.m1, t.m2], { x: M, y: 40, w: W - 2 * M, h: 440, c: "#e9e6df", g: "mir" });
+    h += hst([t.m2, t.m1], { x: M, bottom: 30, w: W - 2 * M, h: 440, c: "#e9e6df", g: "mir" });
+    h += cutout(s.cut, { x: W / 2, h: 1180, bottom: -60, bw: true, z: s.z || 1 });
+    h += lab("HU·X\nPROJECT ON FOOT\nLOOK " + t.n, M, 610, { c: "#e9e6df", fs: 14 }) + lab("FOUR LOOKS\nONE CITY\nNO SET", W - M, 610, { c: "#e9e6df", fs: 14, align: "r" });
+    return h;
+  },
+  // gradient field, a cut-out, a big serif italic word across it (Wizkid)
+  gradient(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:linear-gradient(160deg,${c.g1},${c.g2})"></div>`;
+    h += lab("LOOKS\nCITY\nNOTES", M, M, { c: "#fff", fs: 14 }) + lab("HU·X", 330, M, { c: "#fff", fs: 14 });
+    h += `<div class="a" style="right:${M}px;top:200px;color:#fff;font-weight:700;font-size:20px;line-height:1.1;text-align:left;width:220px">Project<br>On Foot<br><br>Look ${t.n}<br><span style="font-weight:400;font-size:14px;line-height:1.3;display:block;margin-top:10px">${t.itemsEn.replace(/\n/g, "<br>")}</span></div>`;
+    h += cutout(s.cut, { x: s.cx || 470, h: 1180, bottom: -20, z: s.z || 1 });
+    h += `<div class="a sfi" style="left:60px;top:930px;font-size:190px;color:#fff;line-height:.9;letter-spacing:-.03em;white-space:nowrap;mix-blend-mode:normal">${t.script}</div>`;
+    return h;
+  },
+  // the look's item list, a big number, a photo
+  items(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:${c.pn}"></div>`;
+    h += photo(IMG(s.img), { x: 600, y: 40, w: 440, h: 620, pos: s.pos || "50% 30%", z: s.z || 1 });
+    h += `<div class="hl" style="left:${M - 8}px;top:20px;font-size:470px;color:${c.ac}">${t.n}</div>`;
+    h += `<div class="a" style="left:${M}px;top:720px;color:${c.ink};font-weight:800;font-size:40px;line-height:1.08;text-transform:uppercase;letter-spacing:-.01em">${br(t.itemsEn)}</div>`;
+    h += `<div class="a cjk" style="left:${M}px;top:${H - 150}px;color:${c.ink};font-size:28px;letter-spacing:.06em">${t.itemsZh}</div>`;
+    h += lab("HU·X — PROJECT ON FOOT", M, H - 59, { c: c.ink, fs: 14 }) + lab("LOOK " + t.n + " / 04", W - M, H - 59, { c: c.ink, fs: 14, align: "r" });
+    return h;
+  },
+  // the sixteenth-note flicker: the same frame, a new photo every hit
+  burst(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:${c.pn}"></div>`;
+    h += photo(IMG(s.img), { x: 70, y: 150, w: W - 140, h: H - 300, pos: s.pos || "50% 30%", z: s.z || 1 });
+    h += lab("HU·X\nPROJECT ON FOOT", 70, 50, { c: c.ink, fs: 15 }) + lab("LOOK " + t.n, W / 2, 50, { c: c.ink, fs: 15, align: "c" }) + lab("FRAME\n" + String(s.k).padStart(2, "0") + " / 08", W - 70, 50, { c: c.ink, fs: 15, align: "r" });
+    h += lab(t.lk, 70, H - 110, { c: c.ink, fs: 15 }) + lab("HONG KONG\nAW 2026", W - 70, H - 110, { c: c.ink, fs: 15, align: "r" });
+    return h;
+  },
+  // massive word across a black page, small photos, columns of copy
+  massive(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:#0a0a0a"></div>`;
+    h += hst([t.big || "ON FOOT"], { x: 22, y: 40, w: W - 44, h: 560, c: "#f2f0ea" });
+    const ph = s.imgs || [s.img];
+    ph.forEach((n, i) => { h += photo(IMG(n), { x: M + i * 255, y: 640, w: 235, h: 330, pos: "50% 28%", bw: i % 2 == 1, z: s.z || 1 }); });
+    h += `<div class="bd" style="left:${M}px;top:1010px;width:490px;color:#ddd;font-size:14px">${t.p}</div>`;
+    h += `<div class="bd" style="left:${560}px;top:1010px;width:240px;color:#ddd;font-size:14px;text-align:left">${t.p2s || ""}</div>`;
+    h += `<div class="hl" style="right:${M}px;bottom:${M - 6}px;font-size:150px;color:#f2f0ea">${t.num || "04"}</div>`;
+    h += lab("HU·X\nPROJECT ON FOOT", M, H - 76, { c: "#ddd", fs: 14 }) + lab("FOUR LOOKS\nEP.01", 560, H - 76, { c: "#ddd", fs: 14 });
+    return h;
+  },
+  // the four looks side by side
+  lineup(s) {
+    const c = s.c, t = s.t;
+    let h = `<div class="a" style="inset:0;background:${c.bg}"></div>`;
+    h += hst(["FOUR LOOKS"], { x: M, y: 60, w: W - 2 * M, h: 300, c: c.fg });
+    s.cuts.forEach((n, i) => { h += cutout(n, { x: 135 + i * 270, h: 900, bottom: 230 }); });
+    s.names.forEach((nm, i) => {
+      h += `<div class="a" style="left:${30 + i * 270}px;top:${H - 205}px;width:230px;color:${c.fg}"><div style="font-weight:800;font-size:17px">LOOK 0${i + 1}</div><div class="cjk" style="font-size:20px;margin-top:6px">${nm}</div></div>`;
+    });
+    h += lab("HU·X — PROJECT ON FOOT", M, H - 59, { c: c.fg, fs: 14 }) + lab("HONG KONG · AW 2026", W - M, H - 59, { c: c.fg, fs: 14, align: "r" });
+    return h;
+  },
+  sign(s) {
+    let h = `<div class="a" style="inset:0;background:#070707"></div>`;
+    h += `<div class="a" style="left:0;width:${W}px;top:560px;text-align:center;color:#f4f1ea;font-weight:700;font-size:64px;letter-spacing:.12em">huxiang</div>`;
+    h += `<div class="a cjk" style="left:0;width:${W}px;top:660px;text-align:center;color:#cfcac0;font-size:40px;letter-spacing:.08em">@虎小象</div>`;
+    h += lab("HU·X — PROJECT ON FOOT", M, H - 59, { c: "#8d8a84", fs: 14 }) + lab("EP.01", W - M, H - 59, { c: "#8d8a84", fs: 14, align: "r" });
+    return h;
+  },
+};
+
+function fitAll() {
+  const els = [...document.querySelectorAll(".fit")], size = {}, grp = {};
+  els.forEach(el => { el.style.fontSize = "100px"; });
+  els.forEach(el => {
+    const w = el.getBoundingClientRect().width;
+    let f = 100 * (+el.dataset.w) / w;
+    if (el.dataset.h) f = Math.min(f, (+el.dataset.h) / (0.8 * (+el.dataset.n || 1)));
+    const g = el.dataset.g || Math.random();
+    grp[g] = Math.min(grp[g] ?? 1e9, f); size[g] = 1;
+    el._g = g;
+  });
+  els.forEach(el => { el.style.fontSize = grp[el._g] + "px"; });
+}
+window.render = async (s) => {
+  const p = document.getElementById("p");
+  p.innerHTML = T[s.tpl](s);
+  await document.fonts.ready;
+  fitAll();
+  const imgs = [...p.querySelectorAll("img")];
+  await Promise.all(imgs.map(i => i.complete ? (i.decode ? i.decode().catch(() => 0) : 0) : new Promise(r => { i.onload = i.onerror = r; })));
+  return imgs.filter(i => !i.naturalWidth).map(i => i.src);
+};
+</script>
+</body>
+</html>
