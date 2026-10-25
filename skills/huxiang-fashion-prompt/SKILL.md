@@ -20,7 +20,8 @@ Default to producing one copy-pasteable final prompt. Ask a question only when t
 2. Establish authority locks before any scene writing:
    - `OUTFIT_REF` is the wardrobe authority when clothing fidelity matters.
    - `FACE_REF` is optional by default, but becomes the identity authority when provided.
-   - If no `FACE_REF` is provided, define a restrained default identity only if the user needs one.
+   - If no `FACE_REF` is provided and the user needs a fashion subject, use the default identity fallback: a tall, slender East Asian woman with elegant dimensional facial features, clear bone structure, refined natural proportions, realistic skin texture, naturally textured medium-length hair, and a calm premium fashion presence.
+   - Keep hair wind-aware by default: the medium-length hair should show natural movement from the scene's believable airflow without hiding identity.
    - State that reference images override conflicting text.
 3. Define the photographic spine:
    - One image only.
@@ -74,6 +75,16 @@ Use this section order for full prompts:
 11. Negative prompt.
 
 For shorter prompts, keep the same priority order even if sections are compressed.
+
+## Default Identity Fallback
+
+When no `FACE_REF` is provided and the user has not specified another model identity, use this exact default:
+
+```text
+If FACE_REF is NOT provided, use a tall, slender East Asian woman with elegant dimensional facial features, clear bone structure, refined natural proportions, realistic skin texture, naturally textured medium-length hair, and a calm premium fashion presence.
+Her facial features must not become flat, generic, childish, overly cute, overly Westernized, celebrity-like, or identity-inconsistent.
+Her medium-length hair must remain naturally textured and wind-aware: visible strands and ends respond to the same believable airflow as the outfit and scene, without covering the face or weakening identity readability.
+```
 
 ## Reference
 
