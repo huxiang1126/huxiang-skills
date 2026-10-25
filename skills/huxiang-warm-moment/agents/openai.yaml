@@ -1,0 +1,4 @@
+interface:
+  display_name: "虎小象·温暖一刻"
+  short_description: "把一句感受做成有经典回声、英文与暖色手绘点缀的 4:5 图片"
+  default_prompt: "Use $huxiang-warm-moment to turn this feeling into a warm, verified 4:5 image: 我好像一直在等一个不会来的答案。"
